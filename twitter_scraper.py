@@ -2,70 +2,49 @@
 
 import tweepy
 import yaml
-import pandas as pd
-from textblob import TextBlob
-from langdetect import detect
 
-
-# Load credentials from YAML config file
-with open("config.yaml", "r") as f:
+# Load Twitter API credentials from YAML file
+with open('config.yaml', 'r') as f:
     config = yaml.safe_load(f)
 
-# Authenticate with Twitter API
-auth = tweepy.OAuthHandler(config["consumer_key"], config["consumer_secret"])
-auth.set_access_token(config["access_token"], config["access_token_secret"])
-
-# Initialize API client
+# Authenticate to Twitter
+auth = tweepy.OAuth1UserHandler(
+    config['consumer_key'], config['consumer_secret'],
+    config['access_token'], config['access_token_secret']
+)
 api = tweepy.API(auth)
 
-# Define function to perform sentiment analysis
-def get_sentiment(text):
-    try:
-        language = detect(text)
-        if language == 'ar':
-            blob = TextBlob(text)
+# Define the search query
+query = config['search_query']
+language = config['language']
+if 'country' in config:
+    query += f' lang:{language} place_country:{config["country"]}'
+else:
+    query += f' lang:{language}'
+
+# Scrape tweets
+tweets = tweepy.Cursor(api.search_tweets, q=query, tweet_mode='extended', lang=language).items()
+
+# Sentiment analysis
+if 'sentiment' in config and config['sentiment']:
+    from langdetect import detect
+    from textblob import TextBlob
+
+    for tweet in tweets:
+        if tweet.full_text.startswith('RT'):
+            continue
+        if detect(tweet.full_text) == 'ar':
+            blob = TextBlob(tweet.full_text)
+            sentiment = blob.sentiment.polarity
         else:
-            blob = TextBlob(text, analyzer=TextBlobDE())
-        sentiment = blob.sentiment.polarity
-        if sentiment > 0:
-            return 'happy'
-        elif sentiment == 0:
-            return 'neutral'
-        else:
-            return 'mad'
-    except:
-        return 'unknown'
-
-# Define function to scrape tweets
-def scrape_tweets(hashtag, lang, country):
-    # Define dataframe to store results
-    df = pd.DataFrame(columns=["Text", "Language", "Sentiment"])
-
-    # Define query parameters
-    query = hashtag + " -filter:retweets"
-    if lang != "all":
-        query += " lang:" + lang
-    if country:
-        query += " place_country:" + country
-
-    # Scrape tweets
-    for tweet in tweepy.Cursor(api.search_tweets, q=query, tweet_mode="extended").items(config["max_tweets"]):
-        text = tweet.full_text
-        language = detect(text)
-        if lang == "all" or language == lang:
-            sentiment = get_sentiment(text)
-            df = df.append({"Text": text, "Language": language, "Sentiment": sentiment}, ignore_index=True)
-
-    # Export dataframe to CSV
-    df.to_csv(hashtag + ".csv", index=False)
-
-# Load query parameters from YAML config file
-with open("config.yaml", "r") as f:
-    config = yaml.safe_load(f)
-
-# Scrape tweets for each query in config file
-for query in config["queries"]:
-    hashtag = query["hashtag"]
-    lang = query["language"]
-    country = query.get("country")
-    scrape_tweets(hashtag, lang, country)
+            blob = TextBlob(tweet.full_text, analyzer=NaiveBayesAnalyzer())
+            sentiment = blob.sentiment.classification
+        print(f'Tweet: {tweet.full_text}')
+        print(f'Sentiment: {sentiment}\n')
+else:
+    # Save tweets to CSV file
+    with open('tweets.csv', 'w', encoding='utf-8') as f:
+        for tweet in tweets:
+            if tweet.full_text.startswith('RT'):
+                continue
+            f.write(f'{tweet.created_at},{tweet.full_text.replace(",", "")},{tweet.user.screen_name}\n')

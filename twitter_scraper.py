@@ -26,7 +26,7 @@ else:
 # Scrape tweets
 # tweets = tweepy.Cursor(api.search_tweets, q=query, tweet_mode='extended', lang=language).items() // only in extended access API not in basic API v2 endpoint 
 
-tweets =  gen_request_parameters(query=query, results_per_call=max_results)
+tweets =  gen_request_parameters(query=query, results_per_call=10)
 
 # Sentiment analysis
 if 'sentiment' in config and config['sentiment']:

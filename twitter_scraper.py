@@ -28,7 +28,7 @@ else:
 
 # tweets =  gen_request_parameters(query=query, results_per_call=10)
 
-rule = gen_request_parameters(query=query, max_results=100, tweet_fields=["created_at", "public_metrics", "author_id", "lang", "conversation_id", "in_reply_to_user_id", "referenced_tweets"], expansions=["author_id"], user_fields=["username", "public_metrics", "verified"], place_fields=["full_name", "country_code"], media_fields=["duration_ms", "height", "media_key", "public_metrics", "type", "width", "url"], max_pages=1, tweet_mode='extended')
+rule = gen_request_parameters(query=query, max_results=10, tweet_fields=["created_at", "public_metrics", "author_id", "lang", "conversation_id", "in_reply_to_user_id", "referenced_tweets"], expansions=["author_id"], user_fields=["username", "public_metrics", "verified"], place_fields=["full_name", "country_code"], media_fields=["duration_ms", "height", "media_key", "public_metrics", "type", "width", "url"], max_pages=1, tweet_mode='extended')
 tweets = ResultStream(rule_payload=rule,
                       max_results=10,
                       tweet_mode='extended').stream()

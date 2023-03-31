@@ -23,7 +23,9 @@ else:
     query += f' lang:{language}'
 
 # Scrape tweets
-tweets = tweepy.Cursor(api.search_tweets, q=query, tweet_mode='extended', lang=language).items()
+# tweets = tweepy.Cursor(api.search_tweets, q=query, tweet_mode='extended', lang=language).items() // only in extended access API not in basic API v2 endpoint 
+
+tweets = tweepy.Paginator(api.search_all_tweets, query=query, max_results=max_results, tweet_fields='public_metrics')
 
 # Sentiment analysis
 if 'sentiment' in config and config['sentiment']:

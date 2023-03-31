@@ -2,9 +2,7 @@
 
 import tweepy
 import yaml
-import ResultStream
-import gen_request_parameters
-import load_credentials
+
 
 # Load Twitter API credentials from YAML file
 with open('config.yaml', 'r') as f:

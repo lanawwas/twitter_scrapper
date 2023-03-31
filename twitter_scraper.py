@@ -2,6 +2,7 @@
 
 import tweepy
 import yaml
+from searchtweets import ResultStream, gen_request_parameters, load_credentials
 
 # Load Twitter API credentials from YAML file
 with open('config.yaml', 'r') as f:
@@ -25,7 +26,7 @@ else:
 # Scrape tweets
 # tweets = tweepy.Cursor(api.search_tweets, q=query, tweet_mode='extended', lang=language).items() // only in extended access API not in basic API v2 endpoint 
 
-tweets = tweepy.Paginator(Client.search_recent_tweets, query=query, max_results=max_results, tweet_fields='public_metrics')
+tweets =  gen_request_parameters(query=query, results_per_call=max_results)
 
 # Sentiment analysis
 if 'sentiment' in config and config['sentiment']:

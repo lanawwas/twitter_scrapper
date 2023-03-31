@@ -30,4 +30,4 @@ tweets =  gen_request_parameters(query=query, results_per_call=10)
 # Save tweets to CSV file
 with open('tweets.csv', 'w', encoding='utf-8') as f:
  for tweet in tweets:
-  f.write(f'{tweet.created_at},{tweet.full_text.replace(",", "")},{tweet.user.screen_name}\n')
+  f.write(f'{tweet})

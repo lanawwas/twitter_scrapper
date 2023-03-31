@@ -26,11 +26,8 @@ else:
 # Scrape tweets
 # tweets = tweepy.Cursor(api.search_tweets, q=query, tweet_mode='extended', lang=language).items() // only in extended access API not in basic API v2 endpoint 
 
- tweets =  gen_request_parameters(query=query, results_per_call=10)
-
-
-else:
-    # Save tweets to CSV file
+tweets =  gen_request_parameters(query=query, results_per_call=10)
+# Save tweets to CSV file
     with open('tweets.csv', 'w', encoding='utf-8') as f:
         for tweet in tweets:
             if tweet.full_text.startswith('RT'):

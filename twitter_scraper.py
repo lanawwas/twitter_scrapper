@@ -7,11 +7,11 @@ import yaml
 with open('config.yaml', 'r') as f:
     config = yaml.safe_load(f)
 
-# Authenticate to Twitter
-auth = tweepy.OAuth1UserHandler(
-    config['consumer_key'], config['consumer_secret'],
-    config['access_token'], config['access_token_secret']
-)
+# Authenticate to Twitter API
+auth = tweepy.OAuthHandler(config['consumer_key'], config['consumer_secret'])
+auth.set_access_token(config['access_token'], config['access_secret'])
+
+# Create API object
 api = tweepy.API(auth)
 
 # Define the search query

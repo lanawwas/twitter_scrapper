@@ -2,7 +2,7 @@
 
 import tweepy
 import yaml
-from searchtweets_v2 import ResultStream, gen_request_parameters, load_credentials
+from searchtweets import ResultStream, gen_request_parameters, load_credentials
 
 # Load Twitter API credentials from YAML file
 with open('config.yaml', 'r') as f:

@@ -19,4 +19,4 @@ attributes:
   - likes
   - language
   - sentiment
-  - sentiment category
+  - sentiment_category

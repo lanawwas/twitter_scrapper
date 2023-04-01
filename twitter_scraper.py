@@ -23,7 +23,7 @@ if 'since' in config:
 if 'until' in config:
     query += ' until:' + config['until']
 if 'country' in config:
-    query += f' lang:{config["language"]} near:"{config["country"]}" within:{config["radius"]}'
+    query += f' near:"{config["country"]}" within:{config["radius"]}'
 else:
     query += f' lang:{config["language"]}'
 

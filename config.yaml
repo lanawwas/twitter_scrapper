@@ -1,12 +1,12 @@
 max_tweets: 1000
-search_query: 'الاردن'
+search_query: 'covid'
 #hashtag: '#coronavirus'
 #from: 'CNN'
 since: '2020-01-01'
 until: '2022-01-15'
 #country: 'USA'
 #radius: '100km'
-language: 'ar'
+language: 'en'
 sentiment: True
 output_file: 'tweets.csv'
 attributes:

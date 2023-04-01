@@ -4,9 +4,9 @@ search_query: 'covid'
 #from: 'CNN'
 since: '2020-01-01'
 until: '2022-01-15'
-#country: 'USA'
+country: 'USA'
 #radius: '100km'
-language: 'en'
+#language: 'en'
 sentiment: True
 output_file: 'tweets.csv'
 attributes:

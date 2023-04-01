@@ -37,7 +37,7 @@ for i, tweet in enumerate(sntwitter.TwitterSearchScraper(query).get_items()):
     tweet_dict['id'] = tweet.id
     tweet_dict['content'] = tweet.rawContent
     tweet_dict['username'] = tweet.user.username
-    tweet_dict['hashtags'] = ', '.join([hashtag.text for hashtag in tweet.hashtags])
+    #tweet_dict['hashtags'] = ', '.join([hashtag.text for hashtag in tweet.hashtags])
     tweet_dict['retweets'] = tweet.retweetCount
     tweet_dict['likes'] = tweet.likeCount
     tweet_dict['language'] = detect(tweet.rawContent)

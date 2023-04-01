@@ -36,9 +36,13 @@ for i, tweet in enumerate(sntwitter.TwitterSearchScraper(query).get_items()):
     tweet_dict = {}
     tweet_dict['date'] = tweet.date.strftime('%Y-%m-%d %H:%M:%S')
     tweet_dict['id'] = tweet.id
-    tweet_dict['content'] = tweet.content
+    tweet_dict['content'] = tweet.rawContent
     tweet_dict['username'] = tweet.user.username
-    tweet_dict['hashtags'] = ', '.join([hashtag.text for hashtag in tweet.hashtags])
+    hashtags = tweet.hashtags
+    if isinstance(hashtags, str):
+        tweet_dict['hashtags'] = hashtags
+    else:
+        tweet_dict['hashtags'] = ', '.join([hashtag.text for hashtag in hashtags])
     tweet_dict['retweets'] = tweet.retweetCount
     tweet_dict['likes'] = tweet.likeCount
     tweet_dict['language'] = detect(tweet.content)

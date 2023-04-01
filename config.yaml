@@ -1,4 +1,4 @@
-max_tweets: 1000
+max_tweets: 10
 search_query: 'covid'
 #hashtag: '#coronavirus'
 #from: 'CNN'

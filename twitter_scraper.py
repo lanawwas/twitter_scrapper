@@ -41,6 +41,7 @@ for i, tweet in enumerate(sntwitter.TwitterSearchScraper(query).get_items()):
     tweet_dict['retweets'] = tweet.retweetCount
     tweet_dict['likes'] = tweet.likeCount
     tweet_dict['language'] = detect(tweet.rawContent)
+    tweet_dict['location'] = tweet.user.location
     tweets.append(tweet_dict)
 
 # Sentiment analysis
@@ -74,7 +75,7 @@ for tweet in tweets:
 # Check if all required columns are present in the data
 df = pd.DataFrame(tweets)
 
-missing_cols = set(['date', 'id', 'content', 'username', 'hashtags', 'retweets', 'likes', 'language', 'sentiment', 'sentiment_category']) - set(df.columns)
+missing_cols = set(['date', 'id', 'content', 'username', 'hashtags', 'retweets', 'likes', 'language', 'sentiment', 'sentiment_category','location']) - set(df.columns)
 if missing_cols:
     print(df)
 

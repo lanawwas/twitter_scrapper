@@ -1,22 +1,23 @@
-max_tweets: 1000
+max_tweets: 10000
 search_query: 'covid'
 #hashtag: '#coronavirus'
 #from: 'CNN'
-since: '2020-01-01'
+since: '2019-01-01'
 until: '2022-01-15'
-country: 'USA'
+country: 'Amman'
 radius: '100km'
 #language: 'en'
 sentiment: True
 output_file: 'tweets.csv'
 attributes:
   - date
-  - id
+#  - id
   - content
   - username
 #  - hashtags
   - retweets
   - likes
   - language
+  - location  
   - sentiment
   - sentiment_category

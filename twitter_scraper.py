@@ -56,7 +56,7 @@ if 'sentiment' in config and config['sentiment']:
             tweet['sentiment'] = blob.sentiment.polarity
         else:
             blob = TextBlob(tweet['content'])
-            tweet['sentiment'] = blob.sentiment.classification
+            tweet['sentiment'] = blob.sentiment.polarity
             
 # Check if all required columns are present in the data
 df = pd.DataFrame(tweets)

@@ -40,7 +40,7 @@ for i, tweet in enumerate(sntwitter.TwitterSearchScraper(query).get_items()):
     #tweet_dict['hashtags'] = ', '.join([hashtag.text for hashtag in tweet.hashtags])
     tweet_dict['retweets'] = tweet.retweetCount
     tweet_dict['likes'] = tweet.likeCount
-    tweet_dict['language'] = detect(tweet.content)
+    tweet_dict['language'] = detect(tweet.rawContent)
     tweets.append(tweet_dict)
 
 # Sentiment analysis

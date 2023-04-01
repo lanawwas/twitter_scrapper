@@ -53,13 +53,13 @@ if 'sentiment' in config and config['sentiment']:
         else:
             blob = TextBlob(tweet['content'])
             tweet['sentiment'] = blob.sentiment.classification
-
+            
+# Check if all required columns are present in the data
 df = pd.DataFrame(tweets)
-try:
-    df = df[config['attributes']]
-except KeyError as e:
-    missing_cols = set(e.args[0].split('[')[1].split(']')[0].split(', ')).difference(df.columns)
-    print(f"Error: The following columns are missing from the data: {', '.join(missing_cols)}")
+if not all(col in df.columns for col in config['attributes']):
+    missing_cols = [col for col in config['attributes'] if col not in df.columns]
+    raise ValueError(f"The following columns are missing from the data: {missing_cols}")
+
             
 # Save tweets to CSV file
 #df = pd.DataFrame(tweets)

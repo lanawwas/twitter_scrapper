@@ -56,7 +56,7 @@ if 'sentiment' in config and config['sentiment']:
             
 # Check if all required columns are present in the data
 df = pd.DataFrame(tweets)
-print(df.columns)
+print(df)
 
             
 # Save tweets to CSV file

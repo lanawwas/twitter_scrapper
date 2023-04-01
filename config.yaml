@@ -5,7 +5,7 @@ search_query: 'covid'
 since: '2020-01-01'
 until: '2022-01-15'
 country: 'USA'
-#radius: '100km'
+radius: '100km'
 #language: 'en'
 sentiment: True
 output_file: 'tweets.csv'

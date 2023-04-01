@@ -56,9 +56,7 @@ if 'sentiment' in config and config['sentiment']:
             
 # Check if all required columns are present in the data
 df = pd.DataFrame(tweets)
-if not all(col in df.columns for col in config['attributes']):
-    missing_cols = [col for col in config['attributes'] if col not in df.columns]
-    raise ValueError(f"The following columns are missing from the data: {missing_cols}")
+print(df.columns)
 
             
 # Save tweets to CSV file

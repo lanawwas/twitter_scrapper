@@ -14,8 +14,9 @@ attributes:
   - id
   - content
   - username
-  - hashtags
+#  - hashtags
   - retweets
   - likes
   - language
   - sentiment
+  - sentiment category

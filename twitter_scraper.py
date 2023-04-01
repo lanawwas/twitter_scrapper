@@ -54,12 +54,16 @@ if 'sentiment' in config and config['sentiment']:
             blob = TextBlob(tweet['content'])
             tweet['sentiment'] = blob.sentiment.classification
 
+try:
+    df = df[config['attributes']]
+except KeyError:
+    print("Error: Please check the 'attributes' list in the config.yaml file and make sure it contains valid column names.")
+            
 # Save tweets to CSV file
 df = pd.DataFrame(tweets)
 
 if 'attributes' in config:
     df = df[config['attributes']]
 df.to_csv(config['output_file'], index=False, encoding='utf-8-sig')
-else print(df.columns)
 
 print(f'{len(tweets)} tweets were scraped and saved to {config["output_file"]}')

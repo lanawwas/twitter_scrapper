@@ -1,33 +1,63 @@
 #ChatGPT4 as a co-pilot to optimize the code
 
-import tweepy
+#ChatGPT4 as a co-pilot to optimize the code
+
 import yaml
-from searchtweets import ResultStream, gen_request_parameters, load_credentials
+import snscrape.modules.twitter as sntwitter
+import pandas as pd
+from langdetect import detect
+from textblob import TextBlob
+
 
 # Load Twitter API credentials from YAML file
 with open('config.yaml', 'r') as f:
     config = yaml.safe_load(f)
 
-# Authenticate to Twitter API
-auth = tweepy.OAuthHandler(config['consumer_key'], config['consumer_secret'])
-# auth.set_access_token(config['access_token'], config['access_secret'])
-
-# Create API object
-api = tweepy.API(auth)
-
 # Define the search query
 query = config['search_query']
-language = config['language']
+if 'hashtag' in config:
+    query += ' ' + config['hashtag']
+if 'from' in config:
+    query += ' from:' + config['from']
+if 'since' in config:
+    query += ' since:' + config['since']
+if 'until' in config:
+    query += ' until:' + config['until']
 if 'country' in config:
-    query += f' lang:{language} place_country:{config["country"]}'
+    query += f' lang:{config["language"]} near:"{config["country"]}" within:{config["radius"]}'
 else:
-    query += f' lang:{language}'
+    query += f' lang:{config["language"]}'
 
-# Scrape tweets
-# tweets = tweepy.Cursor(api.search_tweets, q=query, tweet_mode='extended', lang=language).items() // only in extended access API not in basic API v2 endpoint 
+# Fetch tweets using snscrape
+tweets = []
+for i, tweet in enumerate(sntwitter.TwitterSearchScraper(query).get_items()):
+    if i >= config['max_tweets']:
+        break
+    tweet_dict = {}
+    tweet_dict['date'] = tweet.date.strftime('%Y-%m-%d %H:%M:%S')
+    tweet_dict['id'] = tweet.id
+    tweet_dict['content'] = tweet.content
+    tweet_dict['username'] = tweet.user.username
+    tweet_dict['hashtags'] = ', '.join([hashtag.text for hashtag in tweet.hashtags])
+    tweet_dict['retweets'] = tweet.retweetCount
+    tweet_dict['likes'] = tweet.likeCount
+    tweet_dict['language'] = detect(tweet.content)
+    tweets.append(tweet_dict)
 
-tweets =  gen_request_parameters(query=query, results_per_call=10)
+# Sentiment analysis
+if 'sentiment' in config and config['sentiment']:
+    for tweet in tweets:
+        if tweet['language'] == 'ar':
+            blob = TextBlob(tweet['content'])
+            tweet['sentiment'] = blob.sentiment.polarity
+        else:
+            blob = TextBlob(tweet['content'])
+            tweet['sentiment'] = blob.sentiment.classification
+
 # Save tweets to CSV file
-with open('tweets.csv', 'w', encoding='utf-8') as f:
- for tweet in tweets:
-  f.write(tweet)
+df = pd.DataFrame(tweets)
+if 'attributes' in config:
+    df = df[config['attributes']]
+df.to_csv(config['output_file'], index=False, encoding='utf-8-sig')
+
+print(f'{len(tweets)} tweets were scraped and saved to {config["output_file"]}')

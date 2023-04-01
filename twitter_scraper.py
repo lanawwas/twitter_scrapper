@@ -56,8 +56,10 @@ if 'sentiment' in config and config['sentiment']:
 
 # Save tweets to CSV file
 df = pd.DataFrame(tweets)
+
 if 'attributes' in config:
     df = df[config['attributes']]
 df.to_csv(config['output_file'], index=False, encoding='utf-8-sig')
+else print(df.columns)
 
 print(f'{len(tweets)} tweets were scraped and saved to {config["output_file"]}')

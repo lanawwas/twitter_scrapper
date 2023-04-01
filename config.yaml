@@ -1,6 +1,6 @@
-max_tweets: 10
+max_tweets: 100
 search_query: 'covid'
-#hashtag: '#coronavirus'
+hashtag: '#coronavirus'
 #from: 'CNN'
 since: '2020-01-01'
 until: '2022-01-15'

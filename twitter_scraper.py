@@ -1,10 +1,9 @@
 #ChatGPT4 as a co-pilot to optimize the code
 
-#ChatGPT4 as a co-pilot to optimize the code
-
 import yaml
 import snscrape.modules.twitter as sntwitter
 import pandas as pd
+import statistics
 from langdetect import detect
 from textblob import TextBlob
 
@@ -38,11 +37,7 @@ for i, tweet in enumerate(sntwitter.TwitterSearchScraper(query).get_items()):
     tweet_dict['id'] = tweet.id
     tweet_dict['content'] = tweet.rawContent
     tweet_dict['username'] = tweet.user.username
-    #hashtags = tweet.hashtags
-    #if isinstance(hashtags, str):
-    #    tweet_dict['hashtags'] = hashtags
-    #else:
-    #    tweet_dict['hashtags'] = ', '.join([hashtag.text for hashtag in hashtags])
+    #tweet_dict['hashtags'] = ', '.join([hashtag.text for hashtag in tweet.hashtags])
     tweet_dict['retweets'] = tweet.retweetCount
     tweet_dict['likes'] = tweet.likeCount
     tweet_dict['language'] = detect(tweet.content)
@@ -57,17 +52,36 @@ if 'sentiment' in config and config['sentiment']:
         else:
             blob = TextBlob(tweet['content'])
             tweet['sentiment'] = blob.sentiment.polarity
-            
+
+# Calculate the mean and standard deviation of the sentiment scores of the sample tweets
+sentiment_scores = [tweet['sentiment'] for tweet in tweets]
+mean_score = sum(sentiment_scores) / len(sentiment_scores)
+stddev_score = statistics.stdev(sentiment_scores)
+
+# Define the threshold ranges for each sentiment category
+happy_threshold = mean_score + 0.5 * stddev_score
+mad_threshold = mean_score - 0.5 * stddev_score
+
+# Categorize the sentiment of each tweet based on the threshold ranges
+for tweet in tweets:
+    if tweet['sentiment'] >= happy_threshold:
+        tweet['sentiment_category'] = 'happy'
+    elif tweet['sentiment'] <= mad_threshold:
+        tweet['sentiment_category'] = 'mad'
+    else:
+        tweet['sentiment_category'] = 'neutral'
+ 
 # Check if all required columns are present in the data
 df = pd.DataFrame(tweets)
-print(df)
 
-            
+missing_cols = set(['date', 'id', 'content', 'username', 'hashtags', 'retweets', 'likes', 'language', 'sentiment', 'sentiment_category']) - set(df.columns)
+if missing_cols:
+    print(df)
+
 # Save tweets to CSV file
-#df = pd.DataFrame(tweets)
 
-#if 'attributes' in config:
-#    df = df[config['attributes']]
-#df.to_csv(config['output_file'], index=False, encoding='utf-8-sig')
+if 'attributes' in config:
+    df = df[config['attributes']]
+df.to_csv(config['output_file'], index=False, encoding='utf-8-sig')
 
-#print(f'{len(tweets)} tweets were scraped and saved to {config["output_file"]}')
+print(f'{len(tweets)} tweets were scraped and saved to {config["output_file"]}')

@@ -57,8 +57,9 @@ if 'sentiment' in config and config['sentiment']:
 df = pd.DataFrame(tweets)
 try:
     df = df[config['attributes']]
-except KeyError:
-    print("Error: Please check the 'attributes' list in the config.yaml file and make sure it contains valid column names.")
+except KeyError as e:
+    missing_cols = set(e.args[0].split('[')[1].split(']')[0].split(', ')).difference(df.columns)
+    print(f"Error: The following columns are missing from the data: {', '.join(missing_cols)}")
             
 # Save tweets to CSV file
 #df = pd.DataFrame(tweets)

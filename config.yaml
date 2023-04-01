@@ -1,12 +1,19 @@
-consumer_key: YOUR_CONSUMER_KEY
-consumer_secret: YOUR_CONSUMER_SECRET
-access_token: YOUR_ACCESS_TOKEN
-access_token_secret: YOUR_ACCESS_TOKEN_SECRET
-max_tweets: 50
-
-queries:
-  - hashtag: "#python"
-    language: "en"
-    country: "JOR"
-  - hashtag: "#تويتر"
-    language: "ar"
+max_tweets: 500
+search_query: 'covid'
+hashtag: '#coronavirus'
+from: 'CNN'
+since: '2022-01-01'
+until: '2022-01-15'
+country: 'USA'
+radius: '100km'
+language: 'en'
+sentiment: True
+output_file: 'tweets.csv'
+attributes:
+  - date
+  - content
+  - username
+  - hashtags
+  - retweets
+  - likes
+  - sentiment

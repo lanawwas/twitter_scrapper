@@ -54,6 +54,7 @@ if 'sentiment' in config and config['sentiment']:
             blob = TextBlob(tweet['content'])
             tweet['sentiment'] = blob.sentiment.classification
 
+df = pd.DataFrame(tweets)
 try:
     df = df[config['attributes']]
 except KeyError:

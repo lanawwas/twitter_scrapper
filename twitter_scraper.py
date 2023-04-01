@@ -2,7 +2,7 @@
 
 #ChatGPT4 as a co-pilot to optimize the code
 
-import yaml
+import pyyaml
 import snscrape.modules.twitter as sntwitter
 import pandas as pd
 from langdetect import detect
